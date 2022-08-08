@@ -1,0 +1,121 @@
+<p-fieldset legend="Estados com mais indisponibilidade">
+  <div class="grid">
+    <p-card
+      class="col estadoMaisIndisponivel"
+      *ngFor="let estadoMaisIndisponivel of estadoMaisIndisponivelList"
+    >
+      <span>{{ estadoMaisIndisponivel.sigla }}</span>
+      <span>{{ estadoMaisIndisponivel.name }}</span>
+    </p-card>
+  </div>
+  <h3 [hidden]="estadoMaisIndisponivelList.length != 0">
+    "Oba!!! Nenhuma indisponibilidade detectada até o momento"
+  </h3>
+</p-fieldset>
+
+<div class="my-5 heightFull">
+  <p-fieldset class="heightFull" legend="Disponibilidade atual dos Serviços">
+    <p-table
+      responsiveLayout="scroll"
+      styleClass="p-datatable-sm"
+      [value]="historicoDisponibilidadeList"
+    >
+      <ng-template pTemplate="caption">
+        <div class="flex align-items-center justify-content-between">
+          Estados
+          <div>
+            <p-calendar
+              showIcon="true"
+              showTime="true"
+              [touchUI]="true"
+              [hourFormat]="12"
+              [(ngModel)]="data"
+              [locale]="calendar_pt_br"
+              (onClose)="getTorio()"
+            ></p-calendar>
+            <p-button
+              class="ml-3"
+              [icon]="
+                loadingHistoricoDisponibilidade
+                  ? 'pi pi-spin pi-spinner'
+                  : 'pi pi-refresh'
+              "
+              (click)="getHistoricoDisponibilidade()"
+            ></p-button>
+          </div>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="header">
+        <tr>
+          <th sortOrder="ASC" pSortableColumn="estado.id">
+            Sigla <p-sortIcon field="estado.id"></p-sortIcon>
+          </th>
+          <th>Autorização</th>
+          <th>Retorno Autorização</th>
+          <th>Inutilização</th>
+          <th>Consulta Protocolo</th>
+          <th>Status Serviço</th>
+          <th>Consulta Cadastro</th>
+          <th>Recepção Evento</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-historicoDisponibilidade>
+        <tr>
+          <td>{{ historicoDisponibilidade.estado.sigla }}</td>
+          <td>
+            <i
+              class="pi {{
+                historicoDisponibilidade.autorizacao | stringToIcon
+              }} "
+            ></i>
+          </td>
+          <td>
+            <i
+              class="pi {{
+                historicoDisponibilidade.retornoAutorizacao | stringToIcon
+              }} "
+            ></i>
+          </td>
+          <td>
+            <i
+              class="pi {{
+                historicoDisponibilidade.inutilizacao | stringToIcon
+              }} "
+            ></i>
+          </td>
+          <td>
+            <i
+              class="pi {{
+                historicoDisponibilidade.consultaProtocolo | stringToIcon
+              }} "
+            ></i>
+          </td>
+          <td>
+            <i
+              class="pi {{
+                historicoDisponibilidade.statusServico | stringToIcon
+              }} "
+            ></i>
+          </td>
+          <td>
+            <i
+              class="pi {{
+                historicoDisponibilidade.consultaCadastro | stringToIcon
+              }} "
+            ></i>
+          </td>
+          <td>
+            <i
+              class="pi {{
+                historicoDisponibilidade.recepcaoEvento | stringToIcon
+              }} "
+            ></i>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <h3 class="emptyHistoricoDisponibilidade" *ngIf="data && historicoDisponibilidadeList.length == 0">
+      "Ops!!! Infelizmente não temos dados de cinco minutos anteriores a data informada"
+    </h3>
+  </p-fieldset>
+</div>
